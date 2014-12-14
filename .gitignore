@@ -1,0 +1,30 @@
+*.py[cod]
+__pycache__
+
+# Packages
+*.egg
+*.egg-info
+dist
+build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+lib
+lib64
+
+# Translations
+*.mo
+
+# Profiling
+*.stats
+
+#emacs backup
+*~
+*#*
+
+#ropemacs
+.ropeproject
