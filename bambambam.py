@@ -41,7 +41,7 @@ class NoneSound:
 
 getAbsolutePath = lambda name : os.path.join(PROG_DIR, 'data', name)
 is_alpha = lambda key : key < 255 and (str.isalnum(chr(key)))
-getFileNamesFromFolder = lambda path, extension : sum([[os.path.join(root,file) for file in files if file[-(1+len(extension)):]=="."+extension] for (root, dirs, files) in os.walk(path, followlinks=True)],[])
+getFileNamesFromFolder = lambda path, extension : sum([[os.path.join(root,file) for file in files if file[-(1+len(extension)):].upper()=="."+extension.upper()] for (root, dirs, files) in os.walk(path, followlinks=True)],[])
 
 class BamBamBam():
 
