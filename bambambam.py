@@ -29,7 +29,7 @@ import pygame
 from pygame.locals import * 
 
 PROG_DIR = "/usr/share/bambam/data"
-USER_DIR = "~/.bambambam"
+USER_DIR = os.path.expanduser("~/.bambambam")
 PROBABILITY_CLEARSCREEN = 10 # in %
 
 with open(os.path.join(PROG_DIR,"colors.txt")) as f:
