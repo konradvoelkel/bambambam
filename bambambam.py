@@ -30,6 +30,7 @@ from pygame.locals import *
 
 PROG_DIR = "/usr/share/bambam/data"
 USER_DIR = "~/.bambambam"
+PROBABILITY_CLEARSCREEN = 10 # in %
 
 with open(os.path.join(PROG_DIR,"colors.txt")) as f:
     COLORS = eval("[" + f.read() + "]")
@@ -44,19 +45,14 @@ getFileNamesFromFolder = lambda path, extension : sum([[os.path.join(root,file) 
 
 class BamBamBam():
 
-    # Load image from path, handling setting of the transparency color key
-    # TODO apparently this doesn't work so well for the Tango images.
+    # Load image from path
     @classmethod
-    def load_image(cls, path, colorkey=None):
+    def load_image(cls, path):
         try:
             image = pygame.image.load(path)
         except pygame.error as message:
             raise SystemExit(message)
-        image = image.convert()
-        if(colorkey):
-            if colorkey is -1:
-                colorkey = image.get_at((0,0))
-            image.set_colorkey(colorkey, RLEACCEL)
+        image = image.convert_alpha()
         return image
 
     # Load sound file from path
@@ -77,8 +73,7 @@ class BamBamBam():
                 sys.exit(0)
             if event.type == KEYDOWN or event.type == MOUSEBUTTONDOWN:
                 if(not "clearnever" in self.history):
-                    # Clear the background 1% of the time
-                    if randint(0, 100) == 1:
+                    if randint(0, 100) < PROBABILITY_CLEARSCREEN:
                         self.clearScreen()
                 if(not "nosound" in self.history):
                     self.play_sound()
@@ -117,7 +112,7 @@ class BamBamBam():
     # Prints a letter at a random location
     def print_letter(self, key):
         font = pygame.font.Font(None, randint(32,512))
-        text = font.render(chr(key), 1, choice(self.colors))
+        text = font.render(chr(key).upper(), 1, choice(self.colors))
         textpos = text.get_rect()
         center = (textpos.width // 2, textpos.height // 2)
         (textpos.centerx, textpos.centery) = (randint(0+center[i], self.screenSize[i]-center[i])
@@ -147,7 +142,7 @@ class BamBamBam():
         pygame.display.set_caption('Bam Bam Bam') 
         self.screen = pygame.display.get_surface() 
         self.screenSize = (self.screen.get_width(), self.screen.get_height()) 
-        self.background = pygame.Surface(self.screen.get_size())
+        self.background = pygame.Surface(self.screen.get_size(), flags=SRCALPHA)
         self.background = self.background.convert()
         self.background.fill((250, 250, 250))
         self.clearScreen()
