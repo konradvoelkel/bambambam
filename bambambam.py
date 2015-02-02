@@ -148,8 +148,8 @@ class BamBamBam():
         self.clearScreen()
         self.colors = COLORS
         self.sounds = [BamBamBam.load_sound(path)
-                       for path in itertools.chain(getFileNamesFromFolder(PROG_DIR,"wav"),
-                                                   getFileNamesFromFolder(USER_DIR,"wav"))]
+                       for path in itertools.chain(getFileNamesFromFolder(PROG_DIR,"ogg"),
+                                                   getFileNamesFromFolder(USER_DIR,"ogg"))]
         self.images = [BamBamBam.load_image(path)
                        for path in itertools.chain(getFileNamesFromFolder(PROG_DIR,"png"),
                                                    getFileNamesFromFolder(USER_DIR,"png"))]
