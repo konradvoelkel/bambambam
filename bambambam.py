@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 #
-# Bam Bam Bam (c) 2013-2014 Konrad Voelkel
+# Bam Bam Bam (c) 2013-2015 Konrad Voelkel
 #
 #    http://www.konradvoelkel.com
 #    forked from Bam Bam version 0.4
@@ -8,16 +8,13 @@
 #     (c) 2010 Spike Burch <spikeb@gmail.com>
 #    licensed under GPL3 or later
 #    some pictures taken from Tango Project
-#    all images are licensed as public domain.
+#    some audio taken from pdsounds.org
+#    all sounds and images are licensed as public domain.
 #
-#TODO incorporate some public domain sounds from http://www.pdsounds.org/
 #TODO write a README on installing this and the goals
 # * main goal for now: teach toddlers human-computer-interaction in a fun way
 # * to run this on python3, it may be easiest to fetch pygame from source
 # * but it should run on python2 (>=2.7) just as well.
-# * main idea on enhancements: have a more complex rewrite from scratch
-#      and call the more complex thing after some pattern in this app is found
-#      i.e. if the user is "ready" for the next stage.
 
 import sys
 import os
