@@ -8,7 +8,6 @@ Thanks in particular to the following pdsounds users:
 * aradlaw: cymbals_01
 * Megan: carrotpeeler
 * ezwa: schoolbell-4
-* ezwa: motorbike-4
 * hugh: peppergrinder
 * hugh: tearingmintleaves
 * Stephan: knock knock
