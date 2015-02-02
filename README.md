@@ -12,3 +12,5 @@ See also a companion blogpost:
 http://www.konradvoelkel.com/homepage/project-ideas/bambam-to-lisp/
 
 Beta-testers, co-developers, idea-givers and creators of content (images&sounds) are very welcome.
+
+May be important to know: typing "quit" closes the program.
