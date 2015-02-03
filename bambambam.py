@@ -38,7 +38,7 @@ class NoneSound:
 
 getAbsolutePath = lambda name : os.path.join(PROG_DIR, 'data', name)
 is_alpha = lambda key : key < 255 and (str.isalnum(chr(key)))
-getFileNamesFromFolder = lambda path, extension : sum([[os.path.join(root,file) for file in files if file[-(1+len(extension)):].upper()=="."+extension.upper()] for (root, dirs, files) in os.walk(path, followlinks=True)],[])
+getFileNamesFromFolder = lambda path, extension : sum([[(file[:-(1+len(extension))],os.path.join(root,file)) for file in files if file[-(1+len(extension)):].upper()=="."+extension.upper()] for (root, dirs, files) in os.walk(path, followlinks=True)],[])
 
 class BamBamBam():
 
@@ -72,15 +72,19 @@ class BamBamBam():
                 if(not "clearnever" in self.history):
                     if randint(0, 100) < PROBABILITY_CLEARSCREEN:
                         self.clearScreen()
+                try:
+                    char = chr(event.key)
+                except AttributeError:
+                    char = ''
                 if(not "nosound" in self.history):
-                    self.play_sound()
+                    self.play_sound(char)
                 if event.type == MOUSEBUTTONDOWN or not(is_alpha(event.key)):
                     if(not "nopic" in self.history):
                         self.print_image()
                 else:
-                    self.history += chr(event.key)
+                    self.history += char
                     if(not "noletter" in self.history):
-                        self.print_letter(event.key)
+                        self.print_letter(char)
                 if("showhist" in self.history):
                     self.clearScreen()
                     self.print_string(self.history[-100:].encode("utf-8"))
@@ -91,14 +95,16 @@ class BamBamBam():
                 if(self.history[-8:] == "clearnow"):
                     self.clearScreen()
 
-    def play_sound(self):
-        if(self.sounds):
-            choice(self.sounds).play()
+    def play_sound(self, char):
+        if(char in self.soundnames_one_char):
+            self.sounds[char].play()
+        elif(self.random_soundnames):
+            self.sounds[choice(self.random_soundnames)].play()
 
     # Prints an image at a random location
     def print_image(self):
-        if(self.images):
-            img = choice(self.images)
+        if(self.imagenames):
+            img = self.images[choice(self.imagenames)]
             imgSize = (img.get_width(), img.get_height())
             scaleFactor = randint(1,4)
             img = pygame.transform.scale(img, [imgSize[i] // scaleFactor for i in (0,1)])
@@ -107,9 +113,9 @@ class BamBamBam():
             pygame.display.flip()
 
     # Prints a letter at a random location
-    def print_letter(self, key):
+    def print_letter(self, char):
         font = pygame.font.Font(None, randint(32,512))
-        text = font.render(chr(key).upper(), 1, choice(self.colors))
+        text = font.render(char.upper(), 1, choice(self.colors))
         textpos = text.get_rect()
         center = (textpos.width // 2, textpos.height // 2)
         (textpos.centerx, textpos.centery) = (randint(0+center[i], self.screenSize[i]-center[i])
@@ -144,12 +150,19 @@ class BamBamBam():
         self.background.fill((250, 250, 250))
         self.clearScreen()
         self.colors = COLORS
-        self.sounds = [BamBamBam.load_sound(path)
-                       for path in itertools.chain(getFileNamesFromFolder(PROG_DIR,"ogg"),
-                                                   getFileNamesFromFolder(USER_DIR,"ogg"))]
-        self.images = [BamBamBam.load_image(path)
-                       for path in itertools.chain(getFileNamesFromFolder(PROG_DIR,"png"),
-                                                   getFileNamesFromFolder(USER_DIR,"png"))]
+        self.sounds = dict([(name,BamBamBam.load_sound(path))
+                            for (name,path)
+                             in itertools.chain(getFileNamesFromFolder(PROG_DIR,"ogg"),
+                                                getFileNamesFromFolder(USER_DIR,"ogg"))])
+        self.soundnames = list(self.sounds.keys())
+        # XXX the next 2 lines should be done more beautifully...
+        self.soundnames_one_char = list(filter(lambda x : len(x) == 1, self.soundnames))
+        self.random_soundnames = list(filter(lambda x : len(x) > 1, self.soundnames))
+        self.images = dict([(name,BamBamBam.load_image(path))
+                            for (name,path)
+                             in itertools.chain(getFileNamesFromFolder(PROG_DIR,"png"),
+                                                getFileNamesFromFolder(USER_DIR,"png"))])
+        self.imagenames = list(self.images.keys())
 
     def main(self):
         self.init()
