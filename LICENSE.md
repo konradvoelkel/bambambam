@@ -1,3 +1,11 @@
+This software is considered to be public domain,
+i.e. available for re-distribution, modification, etc.
+without any restrictions (and without warranties).
+
+To cover the situation where "public domain" is legally not defined,
+it is also released additionally under the
+GNU General Public License Version 3, which is described below.
+
 GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 
