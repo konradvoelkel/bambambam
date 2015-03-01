@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 #
 # Bam Bam Bam (c) 2013-2015 Konrad Voelkel
+# version 0.5 (alpha)
 #
 #    http://www.konradvoelkel.com
 #    forked from Bam Bam version 0.4
@@ -142,6 +143,7 @@ class BamBamBam():
         self.history = ""
         if not pygame.font: print('Warning, fonts disabled')
         if not pygame.mixer: print('Warning, sound disabled')
+        #TODO check if the data folder exists in PROG_DIR and USER_DIR.
         pygame.init() 
         pygame.display.set_mode((0,0), pygame.FULLSCREEN) 
         pygame.display.set_caption('Bam Bam Bam') 
