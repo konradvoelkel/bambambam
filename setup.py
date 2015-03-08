@@ -35,3 +35,5 @@ setup(
     ],
     use_2to3 = False,
 )
+
+#TODO could investigate how to package Gnome(=.desktop), Debian (.deb), OSX (???) and Windows (.exe) versions.
