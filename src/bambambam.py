@@ -151,7 +151,7 @@ class BamBamBam():
         self.screenSize = (self.screen.get_width(), self.screen.get_height()) 
         self.background = pygame.Surface(self.screen.get_size(), flags=SRCALPHA)
         self.background = self.background.convert()
-        self.background.fill((250, 250, 250))
+        self.background.fill((250, 250, 250)) #TODO make bgcolor configurable
         self.clearScreen()
         self.colors = COLORS
         self.sounds = dict([(name,BamBamBam.load_sound(path))
