@@ -26,17 +26,6 @@ import string
 import pygame
 from pygame.locals import * 
 
-# testing;
-# here I try to replace my stupid PROG_DIR approach with setuptools' pkg_resources,
-# which will later also work when using setuptools developer mode or even PyPI.
-import pkg_resources
-DATA_DIR = "../data/"
-my_data = pkg_resources.resource_string(__name__, "../data/colors.txt")
-my_dir = pkg_resources.resource_listdir(__name__, "../data/")
-#print(my_dir)
-#sys.exit()
-# end testing
-
 PROG_DIR = "/usr/share/bambam/data"
 USER_DIR = os.path.expanduser("~/.bambambam")
 PROBABILITY_CLEARSCREEN = 10 # in %
