@@ -79,6 +79,7 @@ class BamBamBam():
                     char = ''
                 except ValueError:
                     char = ''
+                    #TODO change this to using event.unicode
                 if(not "nosound" in self.history):
                     self.play_sound(char)
                 if event.type == MOUSEBUTTONDOWN or not(is_alpha(event.key)):
