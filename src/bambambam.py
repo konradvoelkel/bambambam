@@ -18,6 +18,7 @@
 # * but it should run on python2 (>=2.7) just as well.
 #TODO take a look at http://www.pysiogame.net/
 
+import traceback
 import sys
 import os
 import os.path
@@ -66,38 +67,52 @@ class BamBamBam():
 
     # Processes events
     def inputEvents(self, events):
-        for event in events: 
-            if event.type == QUIT: 
-                sys.exit(0)
-            if event.type == KEYDOWN or event.type == MOUSEBUTTONDOWN:
+        for event in events:
+            if event.type == QUIT: # when someone sent a quit signal via window manager
+                self.running = False
+            elif event.type == MOUSEBUTTONDOWN:
+                self.mouse_drawing = True
+            elif event.type == MOUSEBUTTONUP:
+                self.mouse_drawing = False
+            elif event.type == KEYDOWN:
                 if(not "clearnever" in self.history):
                     if randint(0, 100) < PROBABILITY_CLEARSCREEN:
                         self.clearScreen()
                 try:
+                    #TODO change this to using event.unicode
                     char = chr(event.key)
                 except AttributeError:
                     char = ''
                 except ValueError:
                     char = ''
-                    #TODO change this to using event.unicode
                 if(not "nosound" in self.history):
                     self.play_sound(char)
-                if event.type == MOUSEBUTTONDOWN or not(is_alpha(event.key)):
-                    if(not "nopic" in self.history):
-                        self.print_image()
-                else:
+                if(is_alpha(event.key)):
                     self.history += char
                     if(not "noletter" in self.history):
                         self.print_letter(char)
+                else:
+                    if(not "nopic" in self.history):
+                        self.print_image()
                 if("showhist" in self.history):
                     self.clearScreen()
                     self.print_string(self.history[-100:].encode("utf-8"))
                 if("quit" in self.history):
-                    sys.exit(0)
+                    self.running = False
                 if("killhist" in self.history):
                     self.history = ""
                 if(self.history[-8:] == "clearnow"):
                     self.clearScreen()
+
+    def mouse_draw(self):
+        currentMousePos = pygame.mouse.get_pos()
+        if(self.mouse_drawing):
+            self.draw_line(self.oldMousePos, currentMousePos)
+        self.oldMousePos = currentMousePos
+
+    def draw_line(self, start, end): #TODO fix bad method/variable naming
+        pygame.draw.line(self.screen, (50, 50, 50),  #TODO make fgcolor configurable
+                         start, end, 5) #TODO make thickness configurable
 
     def play_sound(self, char):
         if(char in self.soundnames_one_char):
@@ -114,7 +129,6 @@ class BamBamBam():
             img = pygame.transform.scale(img, [imgSize[i] // scaleFactor for i in (0,1)])
             (w,h) = (randint(0, self.screenSize[i]-imgSize[i]) for i in (0,1))
             self.screen.blit(img, (w, h))
-            pygame.display.flip()
 
     # Prints a letter at a random location
     def print_letter(self, char):
@@ -125,7 +139,6 @@ class BamBamBam():
         (textpos.centerx, textpos.centery) = (randint(0+center[i], self.screenSize[i]-center[i])
                                               for i in (0,1))
         self.screen.blit(text, textpos)
-        pygame.display.flip()
 
     # Prints a string
     def print_string(self, string):
@@ -133,20 +146,21 @@ class BamBamBam():
         text = font.render(string, 1, choice(self.colors))
         textpos = text.get_rect()
         self.screen.blit(text, textpos)
-        pygame.display.flip()
 
     def clearScreen(self):
         self.screen.blit(self.background, (0, 0))
-        pygame.display.flip()
 
     def init(self):
         self.screenSize = (screenwidth, screenheight) = (800, 600) # changes later in code
         self.history = ""
+        self.mouse_drawing = False
+        self.oldMousePos = (0, 0)
+        self.running = True
         if not pygame.font: print('Warning, fonts disabled')
         if not pygame.mixer: print('Warning, sound disabled')
         #TODO check if the data folder exists in PROG_DIR and USER_DIR.
-        pygame.init() 
-        pygame.display.set_mode((0,0), pygame.FULLSCREEN) 
+        pygame.init()
+        pygame.display.set_mode((0,0), pygame.FULLSCREEN | pygame.DOUBLEBUF) 
         pygame.display.set_caption('Bam Bam Bam') 
         self.screen = pygame.display.get_surface() 
         self.screenSize = (self.screen.get_width(), self.screen.get_height()) 
@@ -172,9 +186,19 @@ class BamBamBam():
     def main(self):
         self.init()
         clock = pygame.time.Clock()
-        while True:
-            clock.tick(30)
-            self.inputEvents(pygame.event.get())
+        while self.running:
+            clock.tick(90)
+            pygame.display.flip()
+            self.mouse_draw()
+            try:
+                self.inputEvents(pygame.event.get())
+            except Exception:
+                print(traceback.format_exc())
+                self.running = False
+        pygame.display.quit()
+        #XXX the following doesn't work if pygame.mixer.quit() hangs.
+        pygame.quit()
+        sys.exit()
 
 if(__name__ == "__main__"):
     BamBamBam().main()
