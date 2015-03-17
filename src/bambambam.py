@@ -16,6 +16,7 @@
 # * main goal for now: teach toddlers human-computer-interaction in a fun way
 # * to run this on python3, it may be easiest to fetch pygame from source
 # * but it should run on python2 (>=2.7) just as well.
+#TODO take a look at http://www.pysiogame.net/
 
 import sys
 import os
