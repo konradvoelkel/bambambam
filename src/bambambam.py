@@ -22,7 +22,6 @@ import os
 import os.path
 import itertools
 from random import choice, randint
-import string
 import pygame
 from pygame.locals import * 
 
